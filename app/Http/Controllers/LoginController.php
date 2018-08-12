@@ -36,6 +36,17 @@ class LoginController extends Controller
     }
 
     /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'username';
+    }
+
+
+    /**
      * Show the application's login form.
      *
      * @return \Illuminate\Http\Response
@@ -43,17 +54,6 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return view('login');
-    }
-
-    /**
-     * Attempt to log the user into the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return bool
-     */
-    protected function attemptLogin(Request $request)
-    {
-        return true;
     }
 
     /**
@@ -65,6 +65,8 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        return false;
+        $request->session()->put('user.username', $user->username);
+        $request->session()->put('user.token_type', $user->token_type);
+        $request->session()->put('user.access_token', $user->access_token);
     }
 }
