@@ -28,7 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         $this->app->bind('HttpClient', function ($app) {
-            return new Client(['base_uri' => 'http://shorturl.test/']);
+            return new Client(['base_uri' => $app['config']['app']['api_url']]);
         });
 
         $this->app['auth']->provider('api', function ($app) {
