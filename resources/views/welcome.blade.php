@@ -11,6 +11,8 @@
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
         <!-- Styles -->
+        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <!-- Styles -->
         <style>
             html, body {
                 background-color: #fff;
@@ -22,7 +24,7 @@
             }
 
             .full-height {
-                height: 100vh;
+                height: 80vh;
             }
 
             .flex-center {
@@ -49,16 +51,6 @@
                 font-size: 84px;
             }
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
             .m-b-md {
                 margin-bottom: 30px;
             }
@@ -78,16 +70,46 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    {{ config('app.name') }}
                 </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                <div class="row text-left">
+                    <div class="col-xs-12">
+                        Simplify your links
+                    </div>
                 </div>
+
+                <form id="create-form" action="{{ route('create') }}" method="POST" class="m-b-md">
+                    <div class="row">
+                        <div class="col-xs-7 text-left">
+                            <input type="text" class="form-control" placeholder="Your original URL here" name="url">
+                        </div>
+                        <div class="col-xs-3 text-left">
+                            <select class="form-control" name="expires">
+                                <option value="0">Specify an expiration</option>
+                                <option value="7">7 Days</option>
+                                <option value="15">15 Days</option>
+                                <option value="30">30 Days</option>
+                                <option value="60">60 Days</option>
+                                <option value="90">90 Days</option>
+                            </select>
+                        </div>
+                        <div class="col-xs-2 text-left">
+                            <button type="submit" class="btn btn-primary pull-left">Shorten URL</button>
+                        </div>
+                    </div>
+                    {{ csrf_field() }}
+                </form>
+
+                @if (session('success') === true)
+                    <div class="alert alert-success">
+                        Created successfully
+                    </div>
+                @elseif (session('success') === false)
+                    <div class="alert alert-danger">
+                        {{ session('message') }}
+                    </div>
+                @endif
             </div>
         </div>
     </body>

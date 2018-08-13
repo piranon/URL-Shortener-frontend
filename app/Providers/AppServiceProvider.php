@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Facades\AdminAPIFacade;
 use App\Facades\AdminFacadeInterface;
+use App\Facades\URLAPIFacade;
+use App\Facades\URLFacadeInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(AdminFacadeInterface::class, AdminAPIFacade::class);
+        $this->app->bind(URLFacadeInterface::class, URLAPIFacade::class);
     }
 }

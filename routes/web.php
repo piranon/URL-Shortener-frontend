@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::post('/create', 'HomeController@create')->name('create');
 
 // Authentication Routes...
 Route::get('/login', 'LoginController@showLoginForm')->name('login');
