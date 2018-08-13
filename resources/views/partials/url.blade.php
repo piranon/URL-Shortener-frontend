@@ -13,7 +13,7 @@
                onclick="event.preventDefault();
                        document.getElementById('delete-id').value = '{{ $url->id  }}';
                        document.getElementById('delete-form').submit();">
-                remove
+                delete
             </a>
         @endif
     </td>

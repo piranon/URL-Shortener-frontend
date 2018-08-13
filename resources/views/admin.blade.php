@@ -28,7 +28,7 @@
                             <th scope="col">expires</th>
                             <th scope="col">created</th>
                             <th scope="col">updated</th>
-                            <th scope="col">remove</th>
+                            <th scope="col">action</th>
                         </tr>
                         </thead>
                         <tbody>
