@@ -2,17 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Services\AdminService;
 
+/**
+ * Class AdminController
+ * @package App\Http\Controllers
+ */
 class AdminController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
+     * @var AdminService
      */
-    public function __construct()
+    protected $adminService;
+
+    /**
+     * AdminController constructor.
+     * @param AdminService $adminService
+     */
+    public function __construct(AdminService $adminService)
     {
         $this->middleware('auth');
+        $this->adminService = $adminService;
     }
 
     /**
@@ -22,6 +32,6 @@ class AdminController extends Controller
      */
     public function index()
     {
-        return view('admin');
+        return view('admin', ['urls' => $this->adminService->getAllUrls()]);
     }
 }

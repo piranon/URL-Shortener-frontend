@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Auth\ApiUserGuard;
 use App\Auth\ApiUserProvider;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -27,12 +26,12 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        $this->app->bind('HttpClient', function ($app) {
+        $this->app->bind('GuzzleHttp\Client', function ($app) {
             return new Client(['base_uri' => $app['config']['app']['api_url']]);
         });
 
         $this->app['auth']->provider('api', function ($app) {
-            return new ApiUserProvider($app->make('HttpClient'), $app['session.store']);
+            return new ApiUserProvider($app->make('GuzzleHttp\Client'), $app['session.store']);
         });
     }
 }
