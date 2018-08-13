@@ -8,9 +8,13 @@
                 <div class="panel-heading">Dashboard</div>
 
                 <div class="panel-body">
-                    @if (session('status'))
+                    @if (session('success') === true)
                         <div class="alert alert-success">
-                            {{ session('status') }}
+                            {{ session('message') }}
+                        </div>
+                    @elseif (session('success') === false)
+                        <div class="alert alert-danger">
+                            {{ session('message') }}
                         </div>
                     @endif
                     <table class="table">
@@ -24,12 +28,17 @@
                             <th scope="col">expires</th>
                             <th scope="col">created</th>
                             <th scope="col">updated</th>
+                            <th scope="col">remove</th>
                         </tr>
                         </thead>
                         <tbody>
                             @each('partials.url', $urls, 'url')
                         </tbody>
                     </table>
+                    <form id="delete-form" action="{{ route('admin/delete') }}" method="POST" style="display: none;">
+                        <input type="hidden" id="delete-id" name="id">
+                        {{ csrf_field() }}
+                    </form>
                 </div>
             </div>
         </div>

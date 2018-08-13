@@ -19,3 +19,4 @@ Route::post('/login', 'LoginController@login');
 Route::post('/logout', 'LoginController@logout')->name('logout');
 
 Route::get('/admin', 'AdminController@index')->name('admin');
+Route::post('/admin/delete', 'AdminController@delete')->name('admin/delete');

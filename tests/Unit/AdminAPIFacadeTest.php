@@ -92,4 +92,82 @@ class AdminAPIFacadeTest extends TestCase
 
         $this->adminFacade->getUrls();
     }
+
+    public function testDeleteURLError()
+    {
+        $id = 99;
+        $errorMessage = 'URL Not Found';
+
+        $access_token = 'user_access_token';
+        $this->session->expects($this->once())
+            ->method('get')
+            ->with('user.access_token')
+            ->willReturn($access_token);
+
+        $message = $this->createMock(ResponseInterface::class);
+        $message->expects($this->any())
+            ->method('getStatusCode')
+            ->willReturn(404);
+        $message->expects($this->once())
+            ->method('getBody')
+            ->willReturn(json_encode(['message' => $errorMessage]));
+
+        $this->httpClient->expects($this->once())
+            ->method('request')
+            ->with(
+                'DELETE',
+                'admin/urls/' . $id,
+                [
+                    'http_errors' => false,
+                    'headers' => [
+                        'Authorization' => 'bearer ' . $access_token
+                    ]
+                ]
+            )
+            ->willReturn($message);
+
+        $result = $this->adminFacade->deleteUrl($id);
+
+        $this->assertEquals(
+            ['success' => false, 'message' => $errorMessage],
+            $result
+        );
+    }
+
+    public function testDeleteURLSuccess()
+    {
+        $id = 99;
+
+        $access_token = 'user_access_token';
+        $this->session->expects($this->once())
+            ->method('get')
+            ->with('user.access_token')
+            ->willReturn($access_token);
+
+        $message = $this->createMock(ResponseInterface::class);
+        $message->expects($this->any())
+            ->method('getStatusCode')
+            ->willReturn(202);
+
+        $this->httpClient->expects($this->once())
+            ->method('request')
+            ->with(
+                'DELETE',
+                'admin/urls/' . $id,
+                [
+                    'http_errors' => false,
+                    'headers' => [
+                        'Authorization' => 'bearer ' . $access_token
+                    ]
+                ]
+            )
+            ->willReturn($message);
+
+        $result = $this->adminFacade->deleteUrl($id);
+
+        $this->assertEquals(
+            ['success' => true, 'message' => 'URL deleted'],
+            $result
+        );
+    }
 }

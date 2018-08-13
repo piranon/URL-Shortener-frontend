@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\AdminService;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class AdminController
@@ -33,5 +34,18 @@ class AdminController extends Controller
     public function index()
     {
         return view('admin', ['urls' => $this->adminService->getAllUrls()]);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete(Request $request)
+    {
+        $id = $request->input('id');
+
+        $result = $this->adminService->deleteUrl($id);
+
+        return redirect('admin')->with($result);
     }
 }

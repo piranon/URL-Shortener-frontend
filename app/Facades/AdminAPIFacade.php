@@ -33,6 +33,9 @@ class AdminAPIFacade implements AdminFacadeInterface
         $this->session = $session;
     }
 
+    /**
+     * @return array|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|mixed
+     */
     public function getUrls()
     {
         $response = $this->httpClient->request('GET', 'admin/urls',[
@@ -44,16 +47,44 @@ class AdminAPIFacade implements AdminFacadeInterface
 
         $responseBody = json_decode($response->getBody());
 
-        if ($response->getStatusCode() === 401) {
+        if ((int)$response->getStatusCode() === 401) {
             Auth::guard()->logout();
             $this->session->invalidate();
             return redirect('/');
         }
 
-        if ($response->getStatusCode() !== 200) {
+        if ((int)$response->getStatusCode() !== 200) {
             $responseBody = [];
         }
 
         return $responseBody;
+    }
+
+    /**
+     * @param $id
+     * @return bool|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function deleteUrl($id)
+    {
+        $response = $this->httpClient->request('DELETE', 'admin/urls/' . $id,[
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => 'bearer ' . $this->session->get('user.access_token')
+            ]
+        ]);
+
+        if ((int)$response->getStatusCode() === 401) {
+            Auth::guard()->logout();
+            $this->session->invalidate();
+            return redirect('/');
+        }
+
+        if ((int)$response->getStatusCode() !== 202) {
+            $responseBody = json_decode($response->getBody());
+
+            return ['success' => false, 'message' => $responseBody->message];
+        }
+
+        return ['success' => true, 'message' => 'URL deleted'];
     }
 }

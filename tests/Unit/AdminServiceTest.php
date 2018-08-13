@@ -50,4 +50,27 @@ class AdminServiceTest extends TestCase
         $this->assertEquals($responseMock->created_at, $url->created);
         $this->assertEquals($responseMock->updated_at, $url->updated);
     }
+
+    public function testDeleteIdWithEmptyID()
+    {
+        $result = $this->adminService->deleteUrl('');
+        $this->assertEquals(
+            ['success' => false, 'message' => 'Invalid URL ID.'],
+            $result
+        );
+    }
+
+    public function testDeleteIdSuccess()
+    {
+        $id = 99;
+        $expected = ['success' => true, 'message' => 'URL deleted'];
+
+        $this->adminFacade->expects($this->once())
+            ->method('deleteUrl')
+            ->with($id)
+            ->willReturn($expected);
+
+        $result = $this->adminService->deleteUrl($id);
+        $this->assertEquals($expected, $result);
+    }
 }

@@ -50,4 +50,17 @@ class AdminService
 
         return $urls;
     }
+
+    /**
+     * @param $id
+     * @return bool|mixed
+     */
+    public function deleteUrl($id)
+    {
+        if (empty($id)) {
+            return ['success' => false, 'message' => 'Invalid URL ID.'];
+        }
+
+        return $this->adminFacade->deleteUrl($id);
+    }
 }
