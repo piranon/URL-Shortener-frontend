@@ -170,4 +170,41 @@ class AdminAPIFacadeTest extends TestCase
             $result
         );
     }
+
+    public function testGetURLsByField()
+    {
+        $field = 'code';
+        $searchText = 'xyz';
+
+        $access_token = 'user_access_token';
+        $this->session->expects($this->once())
+            ->method('get')
+            ->with('user.access_token')
+            ->willReturn($access_token);
+
+        $message = $this->createMock(ResponseInterface::class);
+        $message->expects($this->any())
+            ->method('getStatusCode')
+            ->willReturn(200);
+        $message->expects($this->once())
+            ->method('getBody')
+            ->willReturn(json_encode([['id' => 99]]));
+
+        $this->httpClient->expects($this->once())
+            ->method('request')
+            ->with(
+                'GET',
+                'admin/urls/search',
+                [
+                    'http_errors' => false,
+                    'headers' => [
+                        'Authorization' => 'bearer ' . $access_token
+                    ],
+                    'query' => [$field => $searchText]
+                ]
+            )
+            ->willReturn($message);
+
+        $this->adminFacade->getUrlsByField($field, $searchText);
+    }
 }

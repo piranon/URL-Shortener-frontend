@@ -60,6 +60,31 @@ class AdminAPIFacade implements AdminFacadeInterface
         return $responseBody;
     }
 
+    public function getUrlsByField($field, $searchText)
+    {
+        $response = $this->httpClient->request('GET', 'admin/urls/search',[
+            'http_errors' => false,
+            'headers' => [
+                'Authorization' => 'bearer ' . $this->session->get('user.access_token')
+            ],
+            'query' => [$field => $searchText]
+        ]);
+
+        $responseBody = json_decode($response->getBody());
+
+        if ((int)$response->getStatusCode() === 401) {
+            Auth::guard()->logout();
+            $this->session->invalidate();
+            return redirect('/');
+        }
+
+        if ((int)$response->getStatusCode() !== 200) {
+            $responseBody = [];
+        }
+
+        return $responseBody;
+    }
+
     /**
      * @param $id
      * @return bool|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

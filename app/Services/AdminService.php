@@ -51,6 +51,30 @@ class AdminService
         return $urls;
     }
 
+    public function search($field, $searchText)
+    {
+        /** @var URLView $urls */
+        $urls = [];
+
+        $responses = $this->adminFacade->getUrlsByField($field, $searchText);
+
+        foreach ($responses as $response) {
+            $urls[] = new URLView(
+                $response->id,
+                $response->code,
+                $response->hits,
+                $response->url,
+                $response->status,
+                $response->expires_in,
+                $response->created_at,
+                $response->updated_at
+            );
+        }
+
+        return $urls;
+    }
+
+
     /**
      * @param $id
      * @return bool|mixed

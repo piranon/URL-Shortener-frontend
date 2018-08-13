@@ -48,4 +48,12 @@ class AdminController extends Controller
 
         return redirect('admin')->with($result);
     }
+
+    public function search(Request $request)
+    {
+        $field = $request->input('field');
+        $searchText = $request->input('search_text');
+
+        return view('admin', ['urls' => $this->adminService->search($field, $searchText)]);
+    }
 }
