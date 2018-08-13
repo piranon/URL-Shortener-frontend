@@ -43,4 +43,23 @@ class URLAPIFacade implements URLFacadeInterface
 
         return $responseBody;
     }
+
+    /**
+     * @param string $code
+     * @return mixed
+     */
+    public function getOriginalUrl($code)
+    {
+        $response = $this->httpClient->request('GET', 'urls/' . $code, [
+            'http_errors' => false
+        ]);
+
+        $responseBody = json_decode($response->getBody(), true);
+
+        if ((int)$response->getStatusCode() !== 200) {
+            $responseBody['success'] = false;
+        }
+
+        return $responseBody;
+    }
 }

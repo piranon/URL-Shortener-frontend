@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/{code}', 'HomeController@redirect')->name('redirect');
 Route::post('/create', 'HomeController@create')->name('create');
 
 // Authentication Routes...

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Facades\URLFacadeInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class URLService
@@ -10,6 +11,10 @@ use App\Facades\URLFacadeInterface;
  */
 class URLService
 {
+    const STATUS_ACTIVE = 'active';
+    const STATUS_DELETED = 'deleted';
+    const STATUS_EXPIRED = 'expired';
+
     /**
      * @var URLFacadeInterface
      */
@@ -42,5 +47,31 @@ class URLService
         }
 
         return $this->urlFacade->createUrl($create);
+    }
+
+    /**
+     * @param string $code
+     * @return array
+     */
+    public function getRedirectUrl($code)
+    {
+        $originalUrl = $this->urlFacade->getOriginalUrl($code);
+
+        if (!isset($originalUrl['url']) || !isset($originalUrl['status'])) {
+            return ['http_code' => Response::HTTP_NOT_FOUND];
+        }
+
+        $url = $originalUrl['url'];
+        $status = $originalUrl['status'];
+
+        if ($status === URLService::STATUS_ACTIVE) {
+            $httpCode = Response::HTTP_FOUND;
+        } elseif ($status === URLService::STATUS_DELETED || $status === URLService::STATUS_EXPIRED) {
+            $httpCode = Response::HTTP_GONE;
+        } else {
+            $httpCode = Response::HTTP_OK;
+        }
+
+        return ['url' => $url, 'http_code' => $httpCode];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\URLService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class HomeController
@@ -45,5 +46,24 @@ class HomeController extends Controller
         $result = $this->urlService->create($url, $expires);
 
         return redirect('/')->with($result);
+    }
+
+    /**
+     * @param Request $request
+     * @param $code
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function redirect(Request $request, $code)
+    {
+        $url = $this->urlService->getRedirectUrl($code);
+
+        switch ($url['http_code']) {
+            case Response::HTTP_NOT_FOUND:
+                return response(Response::$statusTexts[Response::HTTP_NOT_FOUND]);
+            case Response::HTTP_GONE:
+                return response(Response::$statusTexts[Response::HTTP_GONE]);
+            default:
+                return redirect()->away($url['url'], $url['http_code']);
+        }
     }
 }

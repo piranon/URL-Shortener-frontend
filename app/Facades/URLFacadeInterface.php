@@ -13,4 +13,10 @@ interface URLFacadeInterface
      * @return mixed
      */
     public function createUrl(array $url);
+
+    /**
+     * @param string $code
+     * @return mixed
+     */
+    public function getOriginalUrl($code);
 }
